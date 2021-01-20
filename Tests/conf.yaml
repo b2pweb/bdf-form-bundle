@@ -1,0 +1,20 @@
+framework:
+    csrf_protection:
+        enabled: true
+
+    session:
+        enabled: true
+        storage_id: session.storage.mock_file
+
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+
+    Bdf\Form\Bundle\Tests\Forms\:
+        resource: './Forms/*'
+
+    Bdf\Form\Bundle\Tests\Forms\A:
+        class: 'Bdf\Form\Bundle\Tests\Forms\A'
+        arguments: ['foo']
+        public: true

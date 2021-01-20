@@ -1,0 +1,32 @@
+services:
+  Bdf\Form\Registry\Registry:
+    class: 'Bdf\Form\Registry\Registry'
+
+  Bdf\Form\Bundle\Registry\SymfonyRegistry:
+    class: 'Bdf\Form\Bundle\Registry\SymfonyRegistry'
+    public: true
+    arguments:
+      - '@Bdf\Form\Registry\Registry'
+      - '@service_container'
+
+  Bdf\Form\Registry\RegistryInterface:
+    alias: 'Bdf\Form\Bundle\Registry\SymfonyRegistry'
+    public: true
+
+  Bdf\Form\Aggregate\FormBuilder:
+    factory: ['@Bdf\Form\Registry\RegistryInterface', elementBuilder]
+    arguments: ['Bdf\Form\Aggregate\Form']
+    public: true
+    shared: false
+
+  Bdf\Form\Aggregate\FormBuilderInterface:
+    alias: 'Bdf\Form\Aggregate\FormBuilder'
+    public: true
+
+  Bdf\Form\Csrf\CsrfElementBuilder:
+    class: 'Bdf\Form\Csrf\CsrfElementBuilder'
+    calls:
+      - tokenManager: ['@security.csrf.token_manager']
+    tags: ['form.custom_builder']
+    public: true
+    shared: false

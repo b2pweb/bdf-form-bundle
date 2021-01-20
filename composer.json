@@ -1,0 +1,34 @@
+{
+  "name": "b2pweb/bdf-form-bundle",
+  "description": "Bundle for BF Form",
+  "type": "symfony-bundle",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Vincent Quatrevieux"
+    }
+  ],
+  "autoload": {
+    "psr-4": { "Bdf\\Form\\Bundle\\": "" },
+    "exclude-from-classmap": [
+      "/Tests/"
+    ]
+  },
+  "minimum-stability": "dev",
+  "require": {
+    "php": ">=7.1",
+    "b2pweb/bdf-form": "dev-master",
+    "symfony/config": "^4.0|^5.0",
+    "symfony/dependency-injection": "^4.0|^5.0",
+    "symfony/framework-bundle": "^4.0|^5.0",
+    "symfony/service-contracts": "^1.1|^2.0"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "~7.0|~8.0",
+    "symfony/yaml": "~4.0|^5.0",
+    "symfony/security-csrf": "~4.0|~5.0"
+  },
+  "scripts": {
+    "tests": "phpunit"
+  }
+}
