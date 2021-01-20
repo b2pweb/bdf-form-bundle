@@ -16,7 +16,7 @@
   },
   "minimum-stability": "dev",
   "require": {
-    "php": ">=7.1",
+    "php": ">=7.2",
     "b2pweb/bdf-form": "dev-master",
     "symfony/config": "^4.0|^5.0",
     "symfony/dependency-injection": "^4.0|^5.0",
