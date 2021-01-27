@@ -25,8 +25,20 @@ class FormBundle extends Bundle
                 // Register custom builders
                 foreach ($container->findTaggedServiceIds('form.custom_builder') as $id => $tags) {
                     $builder = $container->findDefinition($id);
+                    $builder
+                        ->setPublic(true)
+                        ->setShared(false)
+                    ;
 
                     $registry->addMethodCall('registerCustomElementBuilder', [$id, $builder->getClass()]);
+                }
+
+                // Register custom forms
+                foreach ($container->findTaggedServiceIds('form.custom_form') as $id => $tags) {
+                    $container->findDefinition($id)
+                        ->setPublic(true)
+                        ->setShared(false)
+                    ;
                 }
             }
         });
