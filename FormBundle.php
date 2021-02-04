@@ -3,8 +3,10 @@
 namespace Bdf\Form\Bundle;
 
 use Bdf\Form\Bundle\Registry\SymfonyRegistry;
+use Bdf\Form\Csrf\CsrfElementBuilder;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 /**
@@ -38,6 +40,12 @@ class FormBundle extends Bundle
                     $container->findDefinition($id)
                         ->setPublic(true)
                         ->setShared(false)
+                    ;
+                }
+
+                if ($container->hasDefinition('security.csrf.token_manager')) {
+                    $container->findDefinition(CsrfElementBuilder::class)
+                        ->addMethodCall('tokenManager', [new Reference('security.csrf.token_manager')])
                     ;
                 }
             }
