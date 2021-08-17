@@ -11,12 +11,14 @@ use Bdf\Form\Bundle\FormBundle;
 use Bdf\Form\Bundle\Registry\SymfonyRegistry;
 use Bdf\Form\Bundle\Tests\Forms\FooElement;
 use Bdf\Form\Bundle\Tests\Forms\FooElementBuilder;
+use Bdf\Form\Bundle\Tests\Forms\MyConstraintValidator;
 use Bdf\Form\Bundle\Tests\Forms\MyCustomForm;
 use Bdf\Form\Csrf\CsrfElement;
 use Bdf\Form\Csrf\CsrfElementBuilder;
 use Bdf\Form\Registry\RegistryInterface;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 /**
  * BdfSerializerBundleTest
@@ -50,6 +52,21 @@ class BdfFormBundleTest extends TestCase
     /**
      *
      */
+    public function test_form_builder_should_use_validator_from_container()
+    {
+        $kernel = new \TestKernel('dev', true);
+        $kernel->boot();
+
+        /** @var FormBuilder $builder */
+        $builder = $kernel->getContainer()->get(FormBuilder::class);
+        $form = $builder->buildElement();
+
+        $this->assertSame($kernel->getContainer()->get('validator'), $form->root()->getValidator());
+    }
+
+    /**
+     *
+     */
     public function test_custom_form()
     {
         $kernel = new \TestKernel('dev', true);
@@ -62,6 +79,20 @@ class BdfFormBundleTest extends TestCase
         $this->assertNotSame($form, $kernel->getContainer()->get(MyCustomForm::class));
 
         $this->assertEquals('foo', $form->a->foo);
+    }
+
+    /**
+     *
+     */
+    public function test_custom_form_should_instantiate_constraint_validator_from_container()
+    {
+        $kernel = new \TestKernel('dev', true);
+        $kernel->boot();
+
+        $form = $kernel->getContainer()->get(RegistryInterface::class)->elementBuilder(MyCustomForm::class)->buildElement();
+        $form->submit(['foo' => 'bar', 'other' => 'baz']);
+
+        $this->assertEquals(new A('foo'), MyConstraintValidator::$injectedParameter);
     }
 
     /**
