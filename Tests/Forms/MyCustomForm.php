@@ -25,5 +25,6 @@ class MyCustomForm extends CustomForm
     protected function configure(FormBuilderInterface $builder): void
     {
         $builder->string('foo');
+        $builder->string('other')->satisfy(new MyConstraint());
     }
 }

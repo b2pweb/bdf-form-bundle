@@ -18,6 +18,8 @@ services:
     arguments: ['Bdf\Form\Aggregate\Form']
     public: true
     shared: false
+    calls:
+      - validator: ['@validator']
 
   Bdf\Form\Aggregate\FormBuilderInterface:
     alias: 'Bdf\Form\Aggregate\FormBuilder'
