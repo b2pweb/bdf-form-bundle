@@ -28,6 +28,11 @@
     "symfony/yaml": "~4.0|^5.0",
     "symfony/security-csrf": "~4.0|~5.0"
   },
+  "extra": {
+    "branch-alias": {
+      "dev-master": "1.0.x-dev"
+    }
+  },
   "scripts": {
     "tests": "phpunit"
   }
