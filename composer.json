@@ -1,6 +1,6 @@
 {
   "name": "b2pweb/bdf-form-bundle",
-  "description": "Bundle for BF Form",
+  "description": "Bundle for BDF Form",
   "type": "symfony-bundle",
   "license": "MIT",
   "authors": [

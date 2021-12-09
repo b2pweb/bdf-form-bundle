@@ -10,7 +10,7 @@ class TestKernel extends \Symfony\Component\HttpKernel\Kernel
 {
     use \Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
 
-    public function registerBundles()
+    public function registerBundles(): iterable
     {
         return [
             new \Symfony\Bundle\FrameworkBundle\FrameworkBundle(),
