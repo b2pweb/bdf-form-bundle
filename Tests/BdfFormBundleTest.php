@@ -4,11 +4,11 @@ namespace Bdf\Form\Bundle\Tests;
 
 require_once __DIR__.'/TestKernel.php';
 
-use Bdf\Form\Bundle\Tests\Forms\A;
 use Bdf\Form\Aggregate\FormBuilder;
 use Bdf\Form\Aggregate\FormBuilderInterface;
 use Bdf\Form\Bundle\FormBundle;
 use Bdf\Form\Bundle\Registry\SymfonyRegistry;
+use Bdf\Form\Bundle\Tests\Forms\A;
 use Bdf\Form\Bundle\Tests\Forms\FooElement;
 use Bdf\Form\Bundle\Tests\Forms\FooElementBuilder;
 use Bdf\Form\Bundle\Tests\Forms\MyConstraintValidator;
@@ -18,13 +18,21 @@ use Bdf\Form\Csrf\CsrfElementBuilder;
 use Bdf\Form\Registry\RegistryInterface;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Symfony\Component\Filesystem\Filesystem;
 
 /**
  * BdfSerializerBundleTest
  */
 class BdfFormBundleTest extends TestCase
 {
+    /**
+     * @return void
+     */
+    protected function tearDown(): void
+    {
+        (new Filesystem())->remove(__DIR__ . '/../var');
+    }
+
     public function test_default_config()
     {
         $builder = $this->createMock(ContainerBuilder::class);
@@ -39,7 +47,7 @@ class BdfFormBundleTest extends TestCase
      */
     public function test_instances()
     {
-        $kernel = new \TestKernel('dev', true);
+        $kernel = new \TestKernel();
         $kernel->boot();
 
         $this->assertInstanceOf(SymfonyRegistry::class, $kernel->getContainer()->get(SymfonyRegistry::class));
@@ -54,7 +62,7 @@ class BdfFormBundleTest extends TestCase
      */
     public function test_form_builder_should_use_validator_from_container()
     {
-        $kernel = new \TestKernel('dev', true);
+        $kernel = new \TestKernel();
         $kernel->boot();
 
         /** @var FormBuilder $builder */
@@ -69,7 +77,7 @@ class BdfFormBundleTest extends TestCase
      */
     public function test_custom_form()
     {
-        $kernel = new \TestKernel('dev', true);
+        $kernel = new \TestKernel();
         $kernel->boot();
 
         $form = $kernel->getContainer()->get(RegistryInterface::class)->elementBuilder(MyCustomForm::class)->buildElement();
@@ -86,7 +94,7 @@ class BdfFormBundleTest extends TestCase
      */
     public function test_custom_form_should_instantiate_constraint_validator_from_container()
     {
-        $kernel = new \TestKernel('dev', true);
+        $kernel = new \TestKernel();
         $kernel->boot();
 
         $form = $kernel->getContainer()->get(RegistryInterface::class)->elementBuilder(MyCustomForm::class)->buildElement();
@@ -100,7 +108,7 @@ class BdfFormBundleTest extends TestCase
      */
     public function test_custom_form_should_use_current_element_builder_instance()
     {
-        $kernel = new \TestKernel('dev', true);
+        $kernel = new \TestKernel();
         $kernel->boot();
 
         $builder = $kernel->getContainer()->get(RegistryInterface::class)->elementBuilder(MyCustomForm::class);
@@ -119,7 +127,7 @@ class BdfFormBundleTest extends TestCase
      */
     public function test_custom_element()
     {
-        $kernel = new \TestKernel('dev', true);
+        $kernel = new \TestKernel();
         $kernel->boot();
 
         $builder = $kernel->getContainer()->get(RegistryInterface::class)->elementBuilder(FooElement::class);
@@ -137,7 +145,7 @@ class BdfFormBundleTest extends TestCase
      */
     public function test_csrf_element()
     {
-        $kernel = new \TestKernel('dev', true);
+        $kernel = new \TestKernel();
         $kernel->boot();
 
         $builder = $kernel->getContainer()->get(RegistryInterface::class)->elementBuilder(CsrfElement::class);

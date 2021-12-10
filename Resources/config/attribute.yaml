@@ -1,0 +1,17 @@
+services:
+  Bdf\Form\Attribute\Processor\CompileAttributesProcessor:
+    class: Bdf\Form\Attribute\Processor\CompileAttributesProcessor
+    arguments:
+      - ['@Bdf\Form\Bundle\Attribute\GeneratedConfiguratorResolver', 'resolveClassName']
+      - ['@Bdf\Form\Bundle\Attribute\GeneratedConfiguratorResolver', 'resolveFilename']
+
+
+  Bdf\Form\Attribute\Processor\ReflectionProcessor:
+    class: Bdf\Form\Attribute\Processor\ReflectionProcessor
+    arguments: ['@Bdf\Form\Attribute\Processor\ConfigureFormBuilderStrategy']
+
+  Bdf\Form\Attribute\Processor\ConfigureFormBuilderStrategy:
+    class: Bdf\Form\Attribute\Processor\ConfigureFormBuilderStrategy
+
+  Bdf\Form\Bundle\Attribute\GeneratedConfiguratorResolver:
+    class: Bdf\Form\Bundle\Attribute\GeneratedConfiguratorResolver

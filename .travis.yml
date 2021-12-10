@@ -6,6 +6,15 @@ php:
   - 7.4
   - 8.0
 
+jobs:
+  include:
+    - stage: with-attributes
+      php: 8.0
+      before_script:
+        - composer require b2pweb/bdf-form-attribute
+      script:
+        - composer tests
+
 install:
   - travis_retry composer install
 

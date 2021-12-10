@@ -10,6 +10,15 @@ class TestKernel extends \Symfony\Component\HttpKernel\Kernel
 {
     use \Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
 
+    private $configs = [];
+
+    public function __construct($configs = [])
+    {
+        parent::__construct('dev', true);
+
+        $this->configs = $configs;
+    }
+
     public function registerBundles(): iterable
     {
         return [
@@ -25,6 +34,11 @@ class TestKernel extends \Symfony\Component\HttpKernel\Kernel
     protected function configureContainer(ContainerBuilder $c, LoaderInterface $loader)
     {
         $loader->load(__DIR__.'/conf.yaml');
+
+        foreach ($this->configs as $config) {
+            $loader->load(__DIR__. '/' . $config);
+        }
+
         //$c->import(__DIR__.'/conf.yaml');
     }
 }
