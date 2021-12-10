@@ -95,7 +95,7 @@ class FormBundleWithAttributeTest extends TestCase
         $kernel = new TestKernel(['conf_php8.yaml', 'conf_disable_compilation.yaml']);
         $kernel->boot();
 
-        $this->assertFileNotExists($kernel->getBuildDir() . '/form/GeneratedConfigurator/Bdf/Form/Bundle/Tests/FormsAttributes/WithAttributesConfigurator.php');
+        $this->assertFileDoesNotExist($kernel->getBuildDir() . '/form/GeneratedConfigurator/Bdf/Form/Bundle/Tests/FormsAttributes/WithAttributesConfigurator.php');
 
         $form = $kernel->getContainer()->get(WithAttributes::class);
         $prop = new ReflectionProperty(AttributeForm::class, 'processor');
