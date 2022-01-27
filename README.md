@@ -2,7 +2,7 @@
 
 Bundle for [BDF Form](https://github.com/b2pweb/bdf-form)
 
-[![Build Status](https://travis-ci.org/b2pweb/bdf-form-bundle.svg?branch=master)](https://travis-ci.org/b2pweb/bdf-form-bundle)
+[![build](https://github.com/b2pweb/bdf-form-bundle/actions/workflows/php.yml/badge.svg)](https://github.com/b2pweb/bdf-form-bundle/actions/workflows/php.yml)
 [![Packagist Version](https://img.shields.io/packagist/v/b2pweb/bdf-form-bundle.svg)](https://packagist.org/packages/b2pweb/bdf-form-bundle)
 [![Total Downloads](https://img.shields.io/packagist/dt/b2pweb/bdf-form-bundle.svg)](https://packagist.org/packages/b2pweb/bdf-form-bundle)
 
