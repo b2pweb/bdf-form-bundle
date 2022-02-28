@@ -93,3 +93,34 @@ class MyController extends AbstractController
     }
 }
 ```
+
+## With PHP 8 attributes
+
+This bundle supports [BDF Form attribute](https://github.com/b2pweb/bdf-form-attribute).
+
+Install the library using composer :
+
+```
+composer require b2pweb/bdf-form-attribute
+```
+
+Add configuration into `config/packages/form.yaml`
+
+```yaml
+form:
+  attributes:
+    compile: true # enable compilation of attributes to native PHP code
+    configuratorClassPrefix: 'GeneratedForm\' # Define base namespace (or class prefix) for generated classes
+    configuratorClassSuffix: 'Configurator' # Define generated classes suffix
+    configuratorBasePath: '%kernel.build_dir%/form' # Define the save path
+```
+
+To disable code generation during development, set configuration `config/packages/dev/form.yaml` :
+
+```yaml
+form:
+  attributes:
+    compile: false # disable compilation to build dynamically forms
+```
+
+Once configured, you can simply declare forms like [example](https://github.com/b2pweb/bdf-form-attribute#declare-a-form-class).

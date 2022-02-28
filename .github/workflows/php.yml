@@ -15,27 +15,52 @@ jobs:
     name: PHP ${{ matrix.php-versions }}
 
     steps:
-      - uses: actions/checkout@v2
+    - uses: actions/checkout@v2
+    
+    - name: Set Timezone
+      uses: szenius/set-timezone@v1.0
+      with:
+        timezoneLinux: "Europe/Paris"
+    
+    - name: Install PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: ${{ matrix.php-versions }}
+        extensions: json
+        ini-values: date.timezone=Europe/Paris
+    - name: Check PHP Version
+      run: php -v
 
-      - name: Set Timezone
-        uses: szenius/set-timezone@v1.0
-        with:
-          timezoneLinux: "Europe/Paris"
+    - name: Validate composer.json and composer.lock
+      run: composer validate --strict
 
-      - name: Install PHP
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: ${{ matrix.php-versions }}
-          extensions: json
-          ini-values: date.timezone=Europe/Paris
-      - name: Check PHP Version
-        run: php -v
+    - name: Install dependencies
+      run: composer install --prefer-dist --no-progress
 
-      - name: Validate composer.json and composer.lock
-        run: composer validate --strict
+    - name: Run test suite
+      run: composer run-script tests
 
-      - name: Install dependencies
-        run: composer install --prefer-dist --no-progress
+  with_attributes:
+    name: With bdf form attributes
+    runs-on: ubuntu-latest
 
-      - name: Run test suite
-        run: composer run-script tests
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Set Timezone
+      uses: szenius/set-timezone@v1.0
+      with:
+        timezoneLinux: "Europe/Paris"
+
+    - name: Install PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: 8.0
+        extensions: json
+        ini-values: date.timezone=Europe/Paris
+
+    - name: Install b2pweb/bdf-form-attribute
+      run: composer require b2pweb/bdf-form-attribute
+
+    - name: Run test suite
+      run: composer run-script tests

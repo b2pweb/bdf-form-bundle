@@ -1,0 +1,10 @@
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+
+    Bdf\Form\Bundle\Tests\FormsAttributes\:
+        resource: './FormsAttributes/*'
+
+    Bdf\Form\Bundle\Tests\FormsAttributes\WithAnonymousFormClass:
+        public: true

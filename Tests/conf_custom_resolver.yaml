@@ -1,0 +1,5 @@
+form:
+    attributes:
+        configuratorClassPrefix: 'Foo\'
+        configuratorClassSuffix: 'Bar'
+        configuratorBasePath: '%kernel.build_dir%/generated'
