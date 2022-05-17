@@ -3,8 +3,7 @@ framework:
         enabled: true
 
     session:
-        enabled: true
-        storage_id: session.storage.mock_file
+        handler_id: null
 
 services:
     _defaults:
@@ -17,4 +16,10 @@ services:
     Bdf\Form\Bundle\Tests\Forms\A:
         class: 'Bdf\Form\Bundle\Tests\Forms\A'
         arguments: ['foo']
+        public: true
+
+    Bdf\Form\Bundle\Tests\ServicesAccess:
+        arguments:
+            - '@security.csrf.token_manager'
+            - '@validator'
         public: true

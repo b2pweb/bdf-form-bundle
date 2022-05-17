@@ -69,7 +69,7 @@ class BdfFormBundleTest extends TestCase
         $builder = $kernel->getContainer()->get(FormBuilder::class);
         $form = $builder->buildElement();
 
-        $this->assertSame($kernel->getContainer()->get('validator'), $form->root()->getValidator());
+        $this->assertSame($kernel->getContainer()->get(ServicesAccess::class)->validator, $form->root()->getValidator());
     }
 
     /**
@@ -155,6 +155,6 @@ class BdfFormBundleTest extends TestCase
         /** @var CsrfElement $element */
         $element = $builder->buildElement();
 
-        $this->assertSame($kernel->getContainer()->get('security.csrf.token_manager'), $element->getTokenManager());
+        $this->assertSame($kernel->getContainer()->get(ServicesAccess::class)->tokenManager, $element->getTokenManager());
     }
 }
