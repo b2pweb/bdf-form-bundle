@@ -24,7 +24,7 @@ class FormExtension extends Extension
      */
     public function load(array $configs, ContainerBuilder $container)
     {
-        $loader = new YamlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
+        $loader = new YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('form.yaml');
 
         $configuration = $this->getConfiguration($configs, $container);
@@ -54,12 +54,7 @@ class FormExtension extends Extension
     }
 
     /**
-     * Configure attribute forms
-     *
-     * @param ContainerBuilder $container
-     * @param array $config
-     *
-     * @return void
+     * Configure attribute forms.
      */
     private function configureAttributes(ContainerBuilder $container, array $config): void
     {
@@ -67,7 +62,7 @@ class FormExtension extends Extension
             ->setArguments([
                 $config['configuratorClassPrefix'],
                 $config['configuratorClassSuffix'],
-                $config['configuratorBasePath']
+                $config['configuratorBasePath'],
             ])
         ;
 

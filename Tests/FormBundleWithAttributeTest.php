@@ -16,7 +16,7 @@ use Symfony\Component\Filesystem\Filesystem;
 use TestKernel;
 
 /**
- * BdfSerializerBundleTest
+ * BdfSerializerBundleTest.
  */
 class FormBundleWithAttributeTest extends TestCase
 {
@@ -29,29 +29,23 @@ class FormBundleWithAttributeTest extends TestCase
         parent::setUp();
     }
 
-    /**
-     * @return void
-     */
     protected function tearDown(): void
     {
-        (new Filesystem())->remove(__DIR__ . '/../var');
+        (new Filesystem())->remove(__DIR__.'/../var');
     }
 
-    /**
-     *
-     */
-    public function test_should_compile_configurators_on_container_build()
+    public function testShouldCompileConfiguratorsOnContainerBuild()
     {
         $kernel = new TestKernel(['conf_php8.yaml']);
         $kernel->boot();
 
-        $this->assertFileExists($kernel->getBuildDir() . '/form/GeneratedConfigurator/Bdf/Form/Bundle/Tests/FormsAttributes/WithAttributesConfigurator.php');
+        $this->assertFileExists($kernel->getBuildDir().'/form/GeneratedConfigurator/Bdf/Form/Bundle/Tests/FormsAttributes/WithAttributesConfigurator.php');
     }
 
     /**
      * @return void
      */
-    public function test_should_use_compile_attributes_processor()
+    public function testShouldUseCompileAttributesProcessor()
     {
         $kernel = new TestKernel(['conf_php8.yaml']);
         $kernel->boot();
@@ -69,7 +63,7 @@ class FormBundleWithAttributeTest extends TestCase
     /**
      * @return void
      */
-    public function test_functional()
+    public function testFunctional()
     {
         $kernel = new TestKernel(['conf_php8.yaml']);
         $kernel->boot();
@@ -87,15 +81,12 @@ class FormBundleWithAttributeTest extends TestCase
         $this->assertSame(['foo' => 'azerty', 'bar' => 5], $form->value());
     }
 
-    /**
-     *
-     */
-    public function test_disable_compilation()
+    public function testDisableCompilation()
     {
         $kernel = new TestKernel(['conf_php8.yaml', 'conf_disable_compilation.yaml']);
         $kernel->boot();
 
-        $this->assertFileDoesNotExist($kernel->getBuildDir() . '/form/GeneratedConfigurator/Bdf/Form/Bundle/Tests/FormsAttributes/WithAttributesConfigurator.php');
+        $this->assertFileDoesNotExist($kernel->getBuildDir().'/form/GeneratedConfigurator/Bdf/Form/Bundle/Tests/FormsAttributes/WithAttributesConfigurator.php');
 
         $form = $kernel->getContainer()->get(WithAttributes::class);
         $prop = new ReflectionProperty(AttributeForm::class, 'processor');
@@ -105,15 +96,12 @@ class FormBundleWithAttributeTest extends TestCase
         $this->assertInstanceOf(ReflectionProcessor::class, $processor);
     }
 
-    /**
-     *
-     */
-    public function test_with_custom_resolver_config()
+    public function testWithCustomResolverConfig()
     {
         $kernel = new TestKernel(['conf_php8.yaml', 'conf_custom_resolver.yaml']);
         $kernel->boot();
 
-        $this->assertFileExists($kernel->getBuildDir() . '/generated/Foo/Bdf/Form/Bundle/Tests/FormsAttributes/WithAttributesBar.php');
+        $this->assertFileExists($kernel->getBuildDir().'/generated/Foo/Bdf/Form/Bundle/Tests/FormsAttributes/WithAttributesBar.php');
 
         $form = $kernel->getContainer()->get(WithAttributes::class);
         $prop = new ReflectionProperty(AttributeForm::class, 'processor');
@@ -129,7 +117,7 @@ class FormBundleWithAttributeTest extends TestCase
      * @testWith ["conf_invalid_configurator_prefix.yaml", "Invalid class name prefix"]
      *           ["conf_invalid_configurator_suffix.yaml", "Invalid class name suffix"]
      */
-    public function test_with_invalid_conf(string $conf, string $error)
+    public function testWithInvalidConf(string $conf, string $error)
     {
         $this->expectExceptionMessage($error);
 
@@ -140,7 +128,7 @@ class FormBundleWithAttributeTest extends TestCase
     /**
      * @return void
      */
-    public function test_with_anonymous_form_class()
+    public function testWithAnonymousFormClass()
     {
         $kernel = new TestKernel(['conf_php8.yaml']);
         $kernel->boot();

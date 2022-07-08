@@ -11,7 +11,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 /**
- * Bundle for register the BDF Form library into the Symfony container
+ * Bundle for register the BDF Form library into the Symfony container.
  */
 class FormBundle extends Bundle
 {

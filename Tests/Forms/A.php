@@ -3,7 +3,7 @@
 namespace Bdf\Form\Bundle\Tests\Forms;
 
 /**
- * Class A
+ * Class A.
  */
 class A
 {

@@ -17,7 +17,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Validator\Constraint;
 
 /**
- * Decorate Registry to handle container for custom types
+ * Decorate Registry to handle container for custom types.
  */
 class SymfonyRegistry implements RegistryInterface
 {
@@ -36,12 +36,8 @@ class SymfonyRegistry implements RegistryInterface
      */
     private $builders = [];
 
-
     /**
      * SymfonyRegistry constructor.
-     *
-     * @param Registry $registry
-     * @param ContainerInterface $container
      */
     public function __construct(Registry $registry, ContainerInterface $container)
     {
@@ -109,19 +105,14 @@ class SymfonyRegistry implements RegistryInterface
     }
 
     /**
-     * Create the form builder instance
-     *
-     * @param RegistryInterface $registry
-     * @param string $formClass
-     *
-     * @return CustomFormBuilder
+     * Create the form builder instance.
      *
      * @internal
      */
     public function customFormBuilder(RegistryInterface $registry, string $formClass): CustomFormBuilder
     {
         return new CustomFormBuilder(
-            function ($builder) use($formClass, $registry) {
+            function ($builder) use ($formClass) {
                 $this->pushElementBuilder(Form::class, $builder);
 
                 return $this->container->get($formClass);
@@ -131,9 +122,9 @@ class SymfonyRegistry implements RegistryInterface
     }
 
     /**
-     * Register the element builder to the related element if possible
+     * Register the element builder to the related element if possible.
      *
-     * @param string $id The service ID on the container
+     * @param string $id           The service ID on the container
      * @param string $builderClass The builder class name
      */
     public function registerCustomElementBuilder(string $id, string $builderClass): void

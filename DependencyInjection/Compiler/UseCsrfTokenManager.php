@@ -8,7 +8,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
 
 /**
- * Use the symfony's csrf token manager is available on container
+ * Use the symfony's csrf token manager is available on container.
  */
 class UseCsrfTokenManager implements CompilerPassInterface
 {

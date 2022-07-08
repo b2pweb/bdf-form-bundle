@@ -5,12 +5,12 @@ namespace Bdf\Form\Bundle\Tests\Forms;
 use Bdf\Form\Leaf\LeafElement;
 
 /**
- * Class FooElement
+ * Class FooElement.
  */
 class FooElement extends LeafElement
 {
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     protected function toPhp($httpValue)
     {
@@ -18,7 +18,7 @@ class FooElement extends LeafElement
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     protected function toHttp($phpValue)
     {

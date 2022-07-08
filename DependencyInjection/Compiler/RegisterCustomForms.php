@@ -6,7 +6,7 @@ use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
- * Register custom forms into container, using tag "form.custom_form"
+ * Register custom forms into container, using tag "form.custom_form".
  */
 class RegisterCustomForms implements CompilerPassInterface
 {

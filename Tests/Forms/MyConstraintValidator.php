@@ -14,16 +14,13 @@ class MyConstraintValidator extends ConstraintValidator
 
     public static $injectedParameter;
 
-    /**
-     * @param A $a
-     */
     public function __construct(A $a)
     {
         $this->a = $a;
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function validate($value, Constraint $constraint)
     {

@@ -21,19 +21,16 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Filesystem\Filesystem;
 
 /**
- * BdfSerializerBundleTest
+ * BdfSerializerBundleTest.
  */
 class BdfFormBundleTest extends TestCase
 {
-    /**
-     * @return void
-     */
     protected function tearDown(): void
     {
-        (new Filesystem())->remove(__DIR__ . '/../var');
+        (new Filesystem())->remove(__DIR__.'/../var');
     }
 
-    public function test_default_config()
+    public function testDefaultConfig()
     {
         $builder = $this->createMock(ContainerBuilder::class);
 
@@ -42,10 +39,7 @@ class BdfFormBundleTest extends TestCase
         $this->assertNull($bundle->build($builder));
     }
 
-    /**
-     *
-     */
-    public function test_instances()
+    public function testInstances()
     {
         $kernel = new \TestKernel();
         $kernel->boot();
@@ -57,10 +51,7 @@ class BdfFormBundleTest extends TestCase
         $this->assertNotSame($kernel->getContainer()->get(FormBuilder::class), $kernel->getContainer()->get(FormBuilder::class));
     }
 
-    /**
-     *
-     */
-    public function test_form_builder_should_use_validator_from_container()
+    public function testFormBuilderShouldUseValidatorFromContainer()
     {
         $kernel = new \TestKernel();
         $kernel->boot();
@@ -72,10 +63,7 @@ class BdfFormBundleTest extends TestCase
         $this->assertSame($kernel->getContainer()->get(ServicesAccess::class)->validator, $form->root()->getValidator());
     }
 
-    /**
-     *
-     */
-    public function test_custom_form()
+    public function testCustomForm()
     {
         $kernel = new \TestKernel();
         $kernel->boot();
@@ -89,10 +77,7 @@ class BdfFormBundleTest extends TestCase
         $this->assertEquals('foo', $form->a->foo);
     }
 
-    /**
-     *
-     */
-    public function test_custom_form_should_instantiate_constraint_validator_from_container()
+    public function testCustomFormShouldInstantiateConstraintValidatorFromContainer()
     {
         $kernel = new \TestKernel();
         $kernel->boot();
@@ -103,10 +88,7 @@ class BdfFormBundleTest extends TestCase
         $this->assertEquals(new A('foo'), MyConstraintValidator::$injectedParameter);
     }
 
-    /**
-     *
-     */
-    public function test_custom_form_should_use_current_element_builder_instance()
+    public function testCustomFormShouldUseCurrentElementBuilderInstance()
     {
         $kernel = new \TestKernel();
         $kernel->boot();
@@ -122,10 +104,7 @@ class BdfFormBundleTest extends TestCase
         $this->assertTrue(isset($form['bar']));
     }
 
-    /**
-     *
-     */
-    public function test_custom_element()
+    public function testCustomElement()
     {
         $kernel = new \TestKernel();
         $kernel->boot();
@@ -140,10 +119,7 @@ class BdfFormBundleTest extends TestCase
         $this->assertSame($kernel->getContainer()->get(A::class), $builder->a);
     }
 
-    /**
-     *
-     */
-    public function test_csrf_element()
+    public function testCsrfElement()
     {
         $kernel = new \TestKernel();
         $kernel->boot();

@@ -6,7 +6,7 @@ use Bdf\Form\Aggregate\FormBuilderInterface;
 use Bdf\Form\Custom\CustomForm;
 
 /**
- * Class MyCustomForm
+ * Class MyCustomForm.
  */
 class MyCustomForm extends CustomForm
 {
