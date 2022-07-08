@@ -36,7 +36,5 @@ class TestKernel extends \Symfony\Component\HttpKernel\Kernel
         foreach ($this->configs as $config) {
             $loader->load(__DIR__.'/'.$config);
         }
-
-        //$c->import(__DIR__.'/conf.yaml');
     }
 }
