@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Bdf\Form\Bundle\Tests\Forms;
 
 use Bdf\Form\AbstractElementBuilder;
@@ -21,7 +20,7 @@ class FooElementBuilder extends AbstractElementBuilder
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     protected function createElement(ValueValidatorInterface $validator, TransformerInterface $transformer): ElementInterface
     {

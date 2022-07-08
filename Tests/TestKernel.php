@@ -2,8 +2,6 @@
 
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
-use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
 use Symfony\Component\Routing\RouteCollectionBuilder;
 
 class TestKernel extends \Symfony\Component\HttpKernel\Kernel
@@ -36,9 +34,7 @@ class TestKernel extends \Symfony\Component\HttpKernel\Kernel
         $loader->load(__DIR__.'/conf.yaml');
 
         foreach ($this->configs as $config) {
-            $loader->load(__DIR__. '/' . $config);
+            $loader->load(__DIR__.'/'.$config);
         }
-
-        //$c->import(__DIR__.'/conf.yaml');
     }
 }

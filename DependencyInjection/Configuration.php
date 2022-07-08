@@ -9,7 +9,7 @@ use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 
 /**
- * Configuration for bdf form bundle
+ * Configuration for bdf form bundle.
  */
 class Configuration implements ConfigurationInterface
 {
@@ -29,7 +29,7 @@ class Configuration implements ConfigurationInterface
     }
 
     /**
-     * Configuration for attributes processor
+     * Configuration for attributes processor.
      *
      * This configuration is enabled when "b2pweb/bdf-form-attribute" package is included
      *
@@ -46,14 +46,14 @@ class Configuration implements ConfigurationInterface
             ->scalarNode('configuratorClassPrefix')->defaultValue('GeneratedConfigurator\\')
                 ->validate()
                     ->ifTrue(function ($value) {
-                        return $value !== null && $value !== '' && !preg_match('#^[a-z][a-z\\\\]*$#i', $value);
+                        return null !== $value && '' !== $value && !preg_match('#^[a-z][a-z\\\\]*$#i', $value);
                     })
                     ->thenInvalid('Invalid class name prefix')
                 ->end()->end()
             ->scalarNode('configuratorClassSuffix')->defaultValue('Configurator')
                 ->validate()
                     ->ifTrue(function ($value) {
-                        return $value !== null && $value !== '' && !preg_match('#^[a-z\\\\]*[a-z]$#i', $value);
+                        return null !== $value && '' !== $value && !preg_match('#^[a-z\\\\]*[a-z]$#i', $value);
                     })
                     ->thenInvalid('Invalid class name suffix')
                 ->end()->end()

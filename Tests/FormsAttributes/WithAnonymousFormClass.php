@@ -10,9 +10,6 @@ use Bdf\Form\PropertyAccess\Setter;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
-/**
- * Class WithAnonymousClass
- */
 class WithAnonymousFormClass
 {
     public $form;

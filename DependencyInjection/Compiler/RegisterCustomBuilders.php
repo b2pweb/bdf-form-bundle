@@ -7,7 +7,7 @@ use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
- * Register user defined element builders, using tag "form.custom_builder"
+ * Register user defined element builders, using tag "form.custom_builder".
  */
 class RegisterCustomBuilders implements CompilerPassInterface
 {

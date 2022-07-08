@@ -9,7 +9,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
  * Precompile AttributeForms
- * This compiled is enabled only if "b2pweb/bdf-form-attribute" is included
+ * This compiled is enabled only if "b2pweb/bdf-form-attribute" is included.
  */
 class CompileAttributeForms implements CompilerPassInterface
 {
