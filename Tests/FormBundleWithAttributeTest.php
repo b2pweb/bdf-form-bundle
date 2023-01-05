@@ -11,9 +11,7 @@ use Bdf\Form\Attribute\Processor\ReflectionProcessor;
 use Bdf\Form\Bundle\Tests\FormsAttributes\WithAnonymousFormClass;
 use Bdf\Form\Bundle\Tests\FormsAttributes\WithAttributes;
 use PHPUnit\Framework\TestCase;
-use ReflectionProperty;
 use Symfony\Component\Filesystem\Filesystem;
-use TestKernel;
 
 /**
  * BdfSerializerBundleTest.
@@ -36,7 +34,7 @@ class FormBundleWithAttributeTest extends TestCase
 
     public function testShouldCompileConfiguratorsOnContainerBuild()
     {
-        $kernel = new TestKernel(['conf_php8.yaml']);
+        $kernel = new \TestKernel(['conf_php8.yaml']);
         $kernel->boot();
 
         $this->assertFileExists($kernel->getBuildDir().'/form/GeneratedConfigurator/Bdf/Form/Bundle/Tests/FormsAttributes/WithAttributesConfigurator.php');
@@ -47,11 +45,11 @@ class FormBundleWithAttributeTest extends TestCase
      */
     public function testShouldUseCompileAttributesProcessor()
     {
-        $kernel = new TestKernel(['conf_php8.yaml']);
+        $kernel = new \TestKernel(['conf_php8.yaml']);
         $kernel->boot();
 
         $form = $kernel->getContainer()->get(WithAttributes::class);
-        $prop = new ReflectionProperty(AttributeForm::class, 'processor');
+        $prop = new \ReflectionProperty(AttributeForm::class, 'processor');
         $prop->setAccessible(true);
 
         $processor = $prop->getValue($form);
@@ -65,7 +63,7 @@ class FormBundleWithAttributeTest extends TestCase
      */
     public function testFunctional()
     {
-        $kernel = new TestKernel(['conf_php8.yaml']);
+        $kernel = new \TestKernel(['conf_php8.yaml']);
         $kernel->boot();
 
         /** @var WithAttributes $form */
@@ -83,13 +81,13 @@ class FormBundleWithAttributeTest extends TestCase
 
     public function testDisableCompilation()
     {
-        $kernel = new TestKernel(['conf_php8.yaml', 'conf_disable_compilation.yaml']);
+        $kernel = new \TestKernel(['conf_php8.yaml', 'conf_disable_compilation.yaml']);
         $kernel->boot();
 
         $this->assertFileDoesNotExist($kernel->getBuildDir().'/form/GeneratedConfigurator/Bdf/Form/Bundle/Tests/FormsAttributes/WithAttributesConfigurator.php');
 
         $form = $kernel->getContainer()->get(WithAttributes::class);
-        $prop = new ReflectionProperty(AttributeForm::class, 'processor');
+        $prop = new \ReflectionProperty(AttributeForm::class, 'processor');
         $prop->setAccessible(true);
 
         $processor = $prop->getValue($form);
@@ -98,13 +96,13 @@ class FormBundleWithAttributeTest extends TestCase
 
     public function testWithCustomResolverConfig()
     {
-        $kernel = new TestKernel(['conf_php8.yaml', 'conf_custom_resolver.yaml']);
+        $kernel = new \TestKernel(['conf_php8.yaml', 'conf_custom_resolver.yaml']);
         $kernel->boot();
 
         $this->assertFileExists($kernel->getBuildDir().'/generated/Foo/Bdf/Form/Bundle/Tests/FormsAttributes/WithAttributesBar.php');
 
         $form = $kernel->getContainer()->get(WithAttributes::class);
-        $prop = new ReflectionProperty(AttributeForm::class, 'processor');
+        $prop = new \ReflectionProperty(AttributeForm::class, 'processor');
         $prop->setAccessible(true);
 
         $processor = $prop->getValue($form);
@@ -121,7 +119,7 @@ class FormBundleWithAttributeTest extends TestCase
     {
         $this->expectExceptionMessage($error);
 
-        $kernel = new TestKernel(['conf_php8.yaml', $conf]);
+        $kernel = new \TestKernel(['conf_php8.yaml', $conf]);
         $kernel->boot();
     }
 
@@ -130,14 +128,14 @@ class FormBundleWithAttributeTest extends TestCase
      */
     public function testWithAnonymousFormClass()
     {
-        $kernel = new TestKernel(['conf_php8.yaml']);
+        $kernel = new \TestKernel(['conf_php8.yaml']);
         $kernel->boot();
 
         $o = $kernel->getContainer()->get(WithAnonymousFormClass::class);
 
         $this->assertSame(['foo' => 'BAR'], $o->process(['foo' => 'bar']));
 
-        $prop = new ReflectionProperty(AttributeForm::class, 'processor');
+        $prop = new \ReflectionProperty(AttributeForm::class, 'processor');
         $prop->setAccessible(true);
 
         $processor = $prop->getValue($o->form);

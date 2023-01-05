@@ -3,7 +3,6 @@
 namespace Bdf\Form\Bundle\DependencyInjection\Compiler;
 
 use Bdf\Form\Attribute\Processor\CompileAttributesProcessor;
-use ReflectionClass;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
@@ -23,7 +22,7 @@ class CompileAttributeForms implements CompilerPassInterface
 
         foreach ($container->findTaggedServiceIds('form.attribute_form') as $id => $tags) {
             $formClass = $container->findDefinition($id)->getClass();
-            $reflection = new ReflectionClass($formClass);
+            $reflection = new \ReflectionClass($formClass);
 
             $compiler->generate(
                 $reflection->getConstructor()->getNumberOfRequiredParameters() > 0
