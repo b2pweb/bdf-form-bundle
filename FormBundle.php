@@ -15,9 +15,6 @@ use Symfony\Component\HttpKernel\Bundle\Bundle;
  */
 class FormBundle extends Bundle
 {
-    /**
-     * {@inheritdoc}
-     */
     public function build(ContainerBuilder $container)
     {
         $container->addCompilerPass(new RegisterCustomBuilders());

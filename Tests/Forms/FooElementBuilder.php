@@ -12,16 +12,13 @@ class FooElementBuilder extends AbstractElementBuilder
 {
     public $a;
 
-    public function __construct(A $a, RegistryInterface $registry = null)
+    public function __construct(A $a, ?RegistryInterface $registry = null)
     {
         parent::__construct($registry);
 
         $this->a = $a;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     protected function createElement(ValueValidatorInterface $validator, TransformerInterface $transformer): ElementInterface
     {
         return new FooElement($validator, $transformer);

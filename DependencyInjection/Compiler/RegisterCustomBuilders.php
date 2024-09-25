@@ -11,9 +11,6 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
  */
 class RegisterCustomBuilders implements CompilerPassInterface
 {
-    /**
-     * {@inheritdoc}
-     */
     public function process(ContainerBuilder $container)
     {
         $registry = $container->findDefinition(SymfonyRegistry::class);

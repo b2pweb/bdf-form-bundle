@@ -15,7 +15,7 @@ class WithAnonymousFormClass
     public $form;
 
     public function __construct(
-        private AttributesProcessorInterface $processor
+        private AttributesProcessorInterface $processor,
     ) {
     }
 

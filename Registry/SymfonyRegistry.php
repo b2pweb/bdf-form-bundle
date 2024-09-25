@@ -47,41 +47,26 @@ class SymfonyRegistry implements RegistryInterface
         $registry->register(CustomForm::class, [$this, 'customFormBuilder']);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function filter($filter): FilterInterface
     {
         return $this->registry->filter($filter);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function constraint($constraint): Constraint
     {
         return $this->registry->constraint($constraint);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function transformer($transformer): TransformerInterface
     {
         return $this->registry->transformer($transformer);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function childBuilder(string $element, string $name): ChildBuilderInterface
     {
         return $this->registry->childBuilder($element, $name);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function elementBuilder(string $element): ElementBuilderInterface
     {
         if (!empty($this->builders[$element])) {
@@ -91,9 +76,6 @@ class SymfonyRegistry implements RegistryInterface
         return $this->registry->elementBuilder($element);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function buttonBuilder(string $name): ButtonBuilderInterface
     {
         return $this->registry->buttonBuilder($name);

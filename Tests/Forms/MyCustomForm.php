@@ -19,9 +19,6 @@ class MyCustomForm extends CustomForm
         $this->a = $a;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function configure(FormBuilderInterface $builder): void
     {
         $builder->string('foo');

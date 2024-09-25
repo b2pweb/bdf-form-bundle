@@ -19,9 +19,6 @@ class MyConstraintValidator extends ConstraintValidator
         $this->a = $a;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function validate($value, Constraint $constraint)
     {
         self::$injectedParameter = $this->a;
