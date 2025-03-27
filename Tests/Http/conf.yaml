@@ -1,0 +1,16 @@
+framework:
+    csrf_protection:
+        enabled: true
+
+    session:
+        handler_id: null
+
+    error_controller: Bdf\Form\Bundle\Tests\Http\TestKernel::error
+
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+
+    Bdf\Form\Bundle\Tests\Http\Form\:
+        resource: './Form/*'
