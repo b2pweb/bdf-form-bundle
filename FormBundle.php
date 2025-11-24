@@ -15,7 +15,7 @@ use Symfony\Component\HttpKernel\Bundle\Bundle;
  */
 class FormBundle extends Bundle
 {
-    public function build(ContainerBuilder $container)
+    public function build(ContainerBuilder $container): void
     {
         $container->addCompilerPass(new RegisterCustomBuilders());
         $container->addCompilerPass(new RegisterCustomForms());
