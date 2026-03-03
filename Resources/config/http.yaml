@@ -1,0 +1,9 @@
+services:
+    Bdf\Form\Bundle\Http\Submit\SubmitFormValueResolver:
+        class: 'Bdf\Form\Bundle\Http\Submit\SubmitFormValueResolver'
+        arguments:
+            - '@Bdf\Form\Registry\RegistryInterface'
+            - '@?translator.default'
+        tags:
+            - 'controller.argument_value_resolver'
+            - 'kernel.event_subscriber'

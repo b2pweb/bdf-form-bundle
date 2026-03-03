@@ -31,6 +31,10 @@ class FormExtension extends Extension
             $loader->load('attribute.yaml');
         }
 
+        if (PHP_VERSION_ID >= 80100) {
+            $loader->load('http.yaml');
+        }
+
         $container
             ->registerForAutoconfiguration(ElementBuilderInterface::class)
             ->addTag('form.custom_builder')

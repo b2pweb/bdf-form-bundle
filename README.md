@@ -91,6 +91,28 @@ class MyController extends AbstractController
         
         return new Reponse('ok');
     }
+
+    public function withArgumentResolver(#[SubmitForm(validate: false)] MyForm $form)
+    {
+        // You can also use symfony argument resolver to automatically inject the form and submit it
+        // If you want the form to be validated automatically, you can set the `validate` parameter to its default value
+        // In this case, a InvalidFormException will be thrown if the form is invalid
+        if (!$form->valid()) {
+            throw new FormError($form->error());
+        }
+
+        $this->service->save($form->value());
+
+        return new Reponse('ok');
+    }
+
+    public function withArgumentResolverValue(#[SubmitForm(form: MyForm::class)] MyDto $value)
+    {
+        // The argument resolver can also submit, validate and generate the value automatically
+        $this->service->save($value);
+
+        return new Reponse('ok');
+    }
 }
 ```
 
