@@ -19,7 +19,7 @@ class MyConstraintValidator extends ConstraintValidator
         $this->a = $a;
     }
 
-    public function validate($value, Constraint $constraint)
+    public function validate($value, Constraint $constraint): void
     {
         self::$injectedParameter = $this->a;
     }
