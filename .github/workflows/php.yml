@@ -106,6 +106,9 @@ jobs:
           ini-values: date.timezone=Europe/Paris
 
       - name: Install dependencies
+        run: composer install --prefer-dist --no-progress
+
+      - name: Install bdf form
         run: composer req --dev 'b2pweb/bdf-form:~${{ matrix.form-versions.package }}.0' --prefer-dist --no-progress
 
       - name: Run test suite
