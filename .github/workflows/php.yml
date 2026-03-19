@@ -69,6 +69,7 @@ jobs:
   bdf_form_compatibility:
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
         form-versions:
           - package: '1.0'
