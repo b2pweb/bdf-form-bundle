@@ -12,6 +12,8 @@ use Bdf\Form\ElementInterface;
 use Bdf\Form\Filter\FilterInterface;
 use Bdf\Form\Registry\Registry;
 use Bdf\Form\Registry\RegistryInterface;
+use Bdf\Form\Struct\StructForm;
+use Bdf\Form\Struct\StructFormBuilder;
 use Bdf\Form\Transformer\TransformerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Validator\Constraint;
@@ -21,6 +23,8 @@ use Symfony\Component\Validator\Constraint;
  */
 class SymfonyRegistry implements RegistryInterface
 {
+    public const STRUCT_FORM_PROCESSOR_SERVICE_ID = 'bdf_form.struct.processor';
+
     /**
      * @var Registry
      */
@@ -45,6 +49,10 @@ class SymfonyRegistry implements RegistryInterface
         $this->container = $container;
 
         $registry->register(CustomForm::class, [$this, 'customFormBuilder']);
+
+        if (\class_exists(StructForm::class)) {
+            $registry->register(StructForm::class, [$this, 'structFormBuilder']);
+        }
     }
 
     public function filter($filter): FilterInterface
@@ -100,6 +108,19 @@ class SymfonyRegistry implements RegistryInterface
                 return $this->container->get($formClass);
             },
             $registry->elementBuilder(Form::class)
+        );
+    }
+
+    /**
+     * Create the form builder instance.
+     *
+     * @internal
+     */
+    public function structFormBuilder(RegistryInterface $registry, string $formClass): StructFormBuilder
+    {
+        return new StructFormBuilder(
+            $this->container->get(self::STRUCT_FORM_PROCESSOR_SERVICE_ID),
+            $registry->elementBuilder(Form::class),
         );
     }
 

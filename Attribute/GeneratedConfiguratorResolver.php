@@ -2,7 +2,6 @@
 
 namespace Bdf\Form\Bundle\Attribute;
 
-use Bdf\Form\Attribute\AttributeForm;
 use Bdf\Form\Attribute\Processor\GenerateConfiguratorStrategy;
 
 /**
@@ -40,9 +39,12 @@ class GeneratedConfiguratorResolver
      * Prefix and suffix will be added on the form class name
      * In case of anonymous class, all forbidden chars will be removed to generate a correct class name
      */
-    public function resolveClassName(AttributeForm $form): string
+    public function resolveClassName($formClass): string
     {
-        $formClass = get_class($form);
+        if (\is_object($formClass)) {
+            $formClass = \get_class($formClass);
+        }
+
         $parts = preg_split('#[^a-z\\\\]#i', $formClass);
 
         if (count($parts) > 1) {

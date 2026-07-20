@@ -12,7 +12,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
  */
 class CompileAttributeForms implements CompilerPassInterface
 {
-    public function process(ContainerBuilder $container)
+    public function process(ContainerBuilder $container): void
     {
         /** @var CompileAttributesProcessor $compiler */
         $compiler = $container->get(CompileAttributesProcessor::class);

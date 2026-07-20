@@ -5,11 +5,15 @@ namespace Bdf\Form\Bundle\Tests;
 require_once __DIR__.'/TestKernel.php';
 
 use Bdf\Form\Aggregate\FormBuilder;
+use Bdf\Form\Aggregate\FormInterface;
 use Bdf\Form\Attribute\AttributeForm;
 use Bdf\Form\Attribute\Processor\CompileAttributesProcessor;
 use Bdf\Form\Attribute\Processor\ReflectionProcessor;
+use Bdf\Form\Bundle\Tests\FormsAttributes\StructDto;
 use Bdf\Form\Bundle\Tests\FormsAttributes\WithAnonymousFormClass;
 use Bdf\Form\Bundle\Tests\FormsAttributes\WithAttributes;
+use Bdf\Form\Registry\RegistryInterface;
+use Bdf\Form\Struct\StructForm;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Filesystem\Filesystem;
 
@@ -20,7 +24,7 @@ class FormBundleWithAttributeTest extends TestCase
 {
     protected function setUp(): void
     {
-        if (!class_exists(AttributeForm::class)) {
+        if (!\class_exists(AttributeForm::class)) {
             $this->markTestSkipped();
         }
 
@@ -50,7 +54,7 @@ class FormBundleWithAttributeTest extends TestCase
 
         $form = $kernel->getContainer()->get(WithAttributes::class);
         $prop = new \ReflectionProperty(AttributeForm::class, 'processor');
-        $prop->setAccessible(true);
+        PHP_VERSION_ID >= 80500 || $prop->setAccessible(true);
 
         $processor = $prop->getValue($form);
         $this->assertInstanceOf(CompileAttributesProcessor::class, $processor);
@@ -79,6 +83,40 @@ class FormBundleWithAttributeTest extends TestCase
         $this->assertSame(['foo' => 'azerty', 'bar' => 5], $form->value());
     }
 
+    /**
+     * @return void
+     */
+    public function testFunctionalStruct()
+    {
+        if (!\class_exists(StructForm::class)) {
+            $this->markTestSkipped('Struct not supported');
+        }
+
+        $kernel = new \TestKernel(['conf_php8.yaml']);
+        $kernel->boot();
+
+        /** @var FormInterface<StructDto> $form */
+        $form = $kernel->getContainer()->get(RegistryInterface::class)
+            ->elementBuilder(StructForm::class)
+            ->class(StructDto::class)
+            ->buildElement();
+
+        $form->submit([
+            'id' => -2,
+            'name' => 'azerty',
+        ]);
+
+        $this->assertFalse($form->valid());
+        $this->assertEquals(['id' => 'This value should be positive.'], $form->error()->toArray());
+
+        $form->submit([
+            'id' => 1,
+            'name' => 'azerty',
+        ]);
+        $this->assertTrue($form->valid());
+        $this->assertEquals(new StructDto(1, 'azerty'), $form->value());
+    }
+
     public function testDisableCompilation()
     {
         $kernel = new \TestKernel(['conf_php8.yaml', 'conf_disable_compilation.yaml']);
@@ -88,7 +126,7 @@ class FormBundleWithAttributeTest extends TestCase
 
         $form = $kernel->getContainer()->get(WithAttributes::class);
         $prop = new \ReflectionProperty(AttributeForm::class, 'processor');
-        $prop->setAccessible(true);
+        PHP_VERSION_ID >= 80500 || $prop->setAccessible(true);
 
         $processor = $prop->getValue($form);
         $this->assertInstanceOf(ReflectionProcessor::class, $processor);
@@ -103,7 +141,7 @@ class FormBundleWithAttributeTest extends TestCase
 
         $form = $kernel->getContainer()->get(WithAttributes::class);
         $prop = new \ReflectionProperty(AttributeForm::class, 'processor');
-        $prop->setAccessible(true);
+        PHP_VERSION_ID >= 80500 || $prop->setAccessible(true);
 
         $processor = $prop->getValue($form);
         $this->assertInstanceOf(CompileAttributesProcessor::class, $processor);
@@ -136,7 +174,7 @@ class FormBundleWithAttributeTest extends TestCase
         $this->assertSame(['foo' => 'BAR'], $o->process(['foo' => 'bar']));
 
         $prop = new \ReflectionProperty(AttributeForm::class, 'processor');
-        $prop->setAccessible(true);
+        PHP_VERSION_ID >= 80500 || $prop->setAccessible(true);
 
         $processor = $prop->getValue($o->form);
         $this->assertInstanceOf(CompileAttributesProcessor::class, $processor);

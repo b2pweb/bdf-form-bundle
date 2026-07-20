@@ -4,6 +4,7 @@ namespace Bdf\Form\Bundle\Tests\Http;
 
 require_once __DIR__.'/TestKernel.php';
 
+use Bdf\Form\Struct\StructForm;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpKernel\HttpKernelBrowser;
@@ -125,6 +126,81 @@ class FunctionSubmitFormTest extends TestCase
             'id' => 42,
             'firstName' => 'John',
             'lastName' => 'Doe',
+        ], $content);
+    }
+
+    public function testWithStruct()
+    {
+        if (!\class_exists(StructForm::class)) {
+            $this->markTestSkipped();
+        }
+
+        $this->client->request('POST', '/struct', [
+            'id' => 42,
+            'firstName' => 'John',
+            'lastName' => 'Doe',
+        ]);
+
+        $content = \json_decode($this->client->getResponse()->getContent(), true);
+        $this->assertSame([
+            'id' => 42,
+            'firstName' => 'John',
+            'lastName' => 'Doe',
+        ], $content);
+
+        $this->client->request('POST', '/struct', [
+            'id' => -5,
+            'firstName' => '@@@@',
+            'lastName' => 'Doe',
+        ]);
+
+        $content = \json_decode($this->client->getResponse()->getContent(), true);
+        $this->assertSame([
+            'message' => 'The JSON contains invalid data.',
+            'fields' => [
+                'firstName' => 'This value is not valid.',
+            ],
+        ], $content);
+    }
+
+    public function testWithStructAndForm()
+    {
+        if (!\class_exists(StructForm::class)) {
+            $this->markTestSkipped();
+        }
+
+        $this->client->request('POST', '/struct2', [
+            'id' => 42,
+            'firstName' => 'John',
+            'lastName' => 'Doe',
+        ]);
+
+        $content = \json_decode($this->client->getResponse()->getContent(), true);
+        $this->assertSame([
+            'value' => [
+                'id' => 42,
+                'firstName' => 'John',
+                'lastName' => 'Doe',
+            ],
+            'errors' => [],
+        ], $content);
+
+        $this->client->request('POST', '/struct2', [
+            'id' => -5,
+            'firstName' => '@@@@',
+            'lastName' => 'Doe',
+        ]);
+
+        $content = \json_decode($this->client->getResponse()->getContent(), true);
+        $this->assertSame([
+            'value' => [
+                'id' => '-5',
+                'firstName' => '@@@@',
+                'lastName' => 'Doe',
+            ],
+            'errors' => [
+                'firstName' => 'This value is not valid.',
+            ],
         ], $content);
     }
 }

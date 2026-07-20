@@ -2,10 +2,12 @@
 
 namespace Bdf\Form\Bundle\Http\Submit;
 
+use Bdf\Form\Aggregate\FormInterface;
 use Bdf\Form\Bundle\Http\InvalidFormException;
 use Bdf\Form\Bundle\Http\PayloadSource;
 use Bdf\Form\ElementInterface;
 use Bdf\Form\Registry\RegistryInterface;
+use Bdf\Form\Struct\StructForm;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Controller\ValueResolverInterface;
@@ -16,10 +18,19 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 final class SubmitFormValueResolver implements ValueResolverInterface, EventSubscriberInterface
 {
+    /**
+     * Placeholder value for FormInterface parameter without associated SubmitForm attribute.
+     * The submitted form will be passed to arguments which is marked with this placeholder.
+     *
+     * @var object|null
+     */
+    private static $formArgumentPlaceholder;
+
     public function __construct(
         private readonly RegistryInterface $registry,
         private readonly ?TranslatorInterface $translator = null,
     ) {
+        self::$formArgumentPlaceholder ??= new \stdClass();
     }
 
     #[\Override]
@@ -28,6 +39,10 @@ final class SubmitFormValueResolver implements ValueResolverInterface, EventSubs
         $attribute = $argument->getAttributesOfType(SubmitForm::class)[0] ?? null;
 
         if (null === $attribute) {
+            if (FormInterface::class === $argument->getType()) {
+                return [self::$formArgumentPlaceholder];
+            }
+
             return [];
         }
 
@@ -36,7 +51,7 @@ final class SubmitFormValueResolver implements ValueResolverInterface, EventSubs
         $attribute->value ??= $type && !\is_subclass_of($type, ElementInterface::class);
 
         if (null === $attribute->form) {
-            if (true === $attribute->value) {
+            if (true === $attribute->value && !\class_exists(StructForm::class)) {
                 throw new \LogicException('The form class must be defined when the value is requested');
             }
 
@@ -56,6 +71,7 @@ final class SubmitFormValueResolver implements ValueResolverInterface, EventSubs
     {
         $arguments = $event->getArguments();
         $hasChanged = false;
+        $form = null;
 
         foreach ($arguments as $i => $argument) {
             if (!$argument instanceof SubmitForm) {
@@ -63,7 +79,10 @@ final class SubmitFormValueResolver implements ValueResolverInterface, EventSubs
             }
 
             $payload = $this->extractPayload($event->getRequest(), $argument->source);
-            $form = $this->registry->elementBuilder($argument->form)->buildElement();
+            $form = \is_subclass_of($argument->form, ElementInterface::class)
+                ? $this->registry->elementBuilder($argument->form)->buildElement()
+                : $this->registry->elementBuilder(StructForm::class)->class($argument->form)->buildElement()
+            ;
             $form->submit($payload);
 
             if ($argument->validate && !$form->valid()) {
@@ -72,6 +91,14 @@ final class SubmitFormValueResolver implements ValueResolverInterface, EventSubs
 
             $arguments[$i] = $argument->value ? $form->value() : $form;
             $hasChanged = true;
+        }
+
+        if (null !== $form) {
+            foreach ($arguments as $i => $argument) {
+                if ($argument === self::$formArgumentPlaceholder) {
+                    $arguments[$i] = $form;
+                }
+            }
         }
 
         if ($hasChanged) {

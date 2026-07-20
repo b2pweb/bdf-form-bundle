@@ -3,11 +3,13 @@
 namespace Bdf\Form\Bundle\Tests\Http;
 
 use Bdf;
+use Bdf\Form\Aggregate\FormInterface;
 use Bdf\Form\Bundle\Http\InvalidFormException;
 use Bdf\Form\Bundle\Http\PayloadSource;
 use Bdf\Form\Bundle\Http\Submit\SubmitForm;
 use Bdf\Form\Bundle\Tests\Http\Form\PersonDto;
 use Bdf\Form\Bundle\Tests\Http\Form\PersonForm;
+use Bdf\Form\Bundle\Tests\Http\Form\PersonStruct;
 use Symfony;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -73,6 +75,21 @@ class TestKernel extends Symfony\Component\HttpKernel\Kernel
     public function value(#[SubmitForm(form: PersonForm::class)] PersonDto $dto): JsonResponse
     {
         return new JsonResponse($dto);
+    }
+
+    #[Route('/struct', methods: ['POST'])]
+    public function struct(#[SubmitForm] PersonStruct $struct): JsonResponse
+    {
+        return new JsonResponse($struct);
+    }
+
+    #[Route('/struct2', methods: ['POST'])]
+    public function struct2(#[SubmitForm(validate: false)] PersonStruct $struct, FormInterface $form): JsonResponse
+    {
+        return new JsonResponse([
+            'value' => $form->valid() ? $struct : $form->httpValue(),
+            'errors' => $form->error()->toArray(),
+        ]);
     }
 
     #[Route('/form', methods: ['POST'])]

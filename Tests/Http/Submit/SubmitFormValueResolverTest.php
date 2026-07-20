@@ -9,6 +9,7 @@ use Bdf\Form\Bundle\Http\Submit\SubmitFormValueResolver;
 use Bdf\Form\Bundle\Tests\Http\Form\PersonDto;
 use Bdf\Form\Bundle\Tests\Http\Form\PersonForm;
 use Bdf\Form\Registry\Registry;
+use Bdf\Form\Struct\StructForm;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\ControllerMetadata\ArgumentMetadata;
@@ -56,6 +57,10 @@ class SubmitFormValueResolverTest extends TestCase
 
     public function testResolveWithValueArgumentMissingForm()
     {
+        if (\class_exists(StructForm::class)) {
+            $this->markTestSkipped('This error is not more triggered with struct form');
+        }
+
         $this->expectException(\LogicException::class);
         $this->expectExceptionMessage('The form class must be defined when the value is requested');
 
