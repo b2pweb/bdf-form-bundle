@@ -120,7 +120,7 @@ class SymfonyRegistry implements RegistryInterface
     {
         return new StructFormBuilder(
             $this->container->get(self::STRUCT_FORM_PROCESSOR_SERVICE_ID),
-            $registry->elementBuilder(Form::class),
+            $registry->elementBuilder(Form::class)
         );
     }
 
