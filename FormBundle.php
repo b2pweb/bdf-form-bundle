@@ -12,6 +12,7 @@ use Bdf\Form\Bundle\Http\Submit\SubmitForm;
 use Bdf\Form\Struct\StructForm;
 use Symfony\Component\DependencyInjection\Compiler\PassConfig;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\HttpKernel\Attribute\ValueResolver;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 use function class_exists;
@@ -30,7 +31,7 @@ class FormBundle extends Bundle
         // Fix "Cannot autowire service" when a DTO argument (using StructForm) is present on a controller.
         // Must run after Symfony's RegisterControllerArgumentLocatorsPass (beforeOptimization, priority 0),
         // hence the negative priority, so the controller argument locators are already built.
-        if (class_exists(SubmitForm::class)) {
+        if (class_exists(ValueResolver::class) && class_exists(SubmitForm::class)) {
             $container->addCompilerPass(new RemoveSubmitFormArgumentLocators(), PassConfig::TYPE_BEFORE_OPTIMIZATION, -100);
         }
 
