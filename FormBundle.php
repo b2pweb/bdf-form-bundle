@@ -8,6 +8,7 @@ use Bdf\Form\Bundle\DependencyInjection\Compiler\RegisterCustomBuilders;
 use Bdf\Form\Bundle\DependencyInjection\Compiler\RegisterCustomForms;
 use Bdf\Form\Bundle\DependencyInjection\Compiler\RemoveSubmitFormArgumentLocators;
 use Bdf\Form\Bundle\DependencyInjection\Compiler\UseCsrfTokenManager;
+use Bdf\Form\Bundle\Http\Submit\SubmitForm;
 use Bdf\Form\Struct\StructForm;
 use Symfony\Component\DependencyInjection\Compiler\PassConfig;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -29,7 +30,7 @@ class FormBundle extends Bundle
         // Fix "Cannot autowire service" when a DTO argument (using StructForm) is present on a controller.
         // Must run after Symfony's RegisterControllerArgumentLocatorsPass (beforeOptimization, priority 0),
         // hence the negative priority, so the controller argument locators are already built.
-        if (class_exists(StructForm::class)) {
+        if (class_exists(SubmitForm::class)) {
             $container->addCompilerPass(new RemoveSubmitFormArgumentLocators(), PassConfig::TYPE_BEFORE_OPTIMIZATION, -100);
         }
 
