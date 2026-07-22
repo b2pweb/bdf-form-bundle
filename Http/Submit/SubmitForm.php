@@ -4,7 +4,6 @@ namespace Bdf\Form\Bundle\Http\Submit;
 
 use Bdf\Form\Aggregate\FormInterface;
 use Bdf\Form\Bundle\Http\PayloadSource;
-use Bdf\Form\Custom\CustomForm;
 use Symfony\Component\HttpKernel\Attribute\ValueResolver;
 use Symfony\Component\HttpKernel\ControllerMetadata\ArgumentMetadata;
 
@@ -71,7 +70,9 @@ final class SubmitForm extends ValueResolver
          * The form class to use.
          * If null, it will be determined based on the argument type.
          *
-         * @var class-string<CustomForm>|null
+         * In case of struct form, the DTO/Struct class name will be used instead of the form class.
+         *
+         * @var class-string|null
          */
         public ?string $form = null,
 

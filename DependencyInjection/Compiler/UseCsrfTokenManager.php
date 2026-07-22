@@ -12,7 +12,7 @@ use Symfony\Component\DependencyInjection\Reference;
  */
 class UseCsrfTokenManager implements CompilerPassInterface
 {
-    public function process(ContainerBuilder $container)
+    public function process(ContainerBuilder $container): void
     {
         if ($container->hasDefinition('security.csrf.token_manager')) {
             $container->findDefinition(CsrfElementBuilder::class)
