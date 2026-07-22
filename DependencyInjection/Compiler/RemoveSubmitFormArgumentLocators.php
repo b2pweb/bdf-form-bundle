@@ -3,9 +3,6 @@
 namespace Bdf\Form\Bundle\DependencyInjection\Compiler;
 
 use Bdf\Form\Bundle\Http\Submit\SubmitForm;
-use ReflectionAttribute;
-use ReflectionException;
-use ReflectionMethod;
 use Symfony\Component\DependencyInjection\Argument\ServiceClosureArgument;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -97,15 +94,15 @@ class RemoveSubmitFormArgumentLocators implements CompilerPassInterface
         }
 
         try {
-            $parameters = (new ReflectionMethod($class, $method))->getParameters();
-        } catch (ReflectionException) {
+            $parameters = (new \ReflectionMethod($class, $method))->getParameters();
+        } catch (\ReflectionException) {
             return [];
         }
 
         $names = [];
 
         foreach ($parameters as $parameter) {
-            if ($parameter->getAttributes(SubmitForm::class, ReflectionAttribute::IS_INSTANCEOF)) {
+            if ($parameter->getAttributes(SubmitForm::class, \ReflectionAttribute::IS_INSTANCEOF)) {
                 $names[] = $parameter->name;
             }
         }

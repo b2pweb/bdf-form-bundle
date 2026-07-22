@@ -3,7 +3,6 @@
 namespace Bdf\Form\Bundle\Registry;
 
 use Bdf\Form\Aggregate\Form;
-use Bdf\Form\Aggregate\FormBuilder;
 use Bdf\Form\Button\ButtonBuilderInterface;
 use Bdf\Form\Child\ChildBuilderInterface;
 use Bdf\Form\Custom\CustomForm;

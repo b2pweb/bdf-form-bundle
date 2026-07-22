@@ -15,7 +15,6 @@ use Symfony\Component\HttpKernel\ControllerMetadata\ArgumentMetadata;
 use Symfony\Component\HttpKernel\Event\ControllerArgumentsEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Contracts\Translation\TranslatorInterface;
-use Throwable;
 
 final class SubmitFormValueResolver implements ValueResolverInterface, EventSubscriberInterface
 {
@@ -94,7 +93,7 @@ final class SubmitFormValueResolver implements ValueResolverInterface, EventSubs
             if ($argument->value) {
                 try {
                     $arguments[$i] = $valid ? $form->value() : null;
-                } catch (Throwable) {
+                } catch (\Throwable) {
                     $arguments[$i] = null;
                 }
             } else {
