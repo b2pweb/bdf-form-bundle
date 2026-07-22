@@ -84,7 +84,7 @@ class TestKernel extends Symfony\Component\HttpKernel\Kernel
     }
 
     #[Route('/struct2', methods: ['POST'])]
-    public function struct2(#[SubmitForm(validate: false)] PersonStruct $struct, FormInterface $form): JsonResponse
+    public function struct2(#[SubmitForm(validate: false)] ?PersonStruct $struct, FormInterface $form): JsonResponse
     {
         return new JsonResponse([
             'value' => $form->valid() ? $struct : $form->httpValue(),

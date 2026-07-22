@@ -3,6 +3,7 @@
 namespace Bdf\Form\Bundle\Registry;
 
 use Bdf\Form\Aggregate\Form;
+use Bdf\Form\Aggregate\FormBuilder;
 use Bdf\Form\Button\ButtonBuilderInterface;
 use Bdf\Form\Child\ChildBuilderInterface;
 use Bdf\Form\Custom\CustomForm;
@@ -48,6 +49,7 @@ class SymfonyRegistry implements RegistryInterface
         $this->registry = $registry;
         $this->container = $container;
 
+        $registry->register(Form::class, function () { return $this->container->get('bdf_form.inner_form_builder'); });
         $registry->register(CustomForm::class, [$this, 'customFormBuilder']);
 
         if (\class_exists(StructForm::class)) {

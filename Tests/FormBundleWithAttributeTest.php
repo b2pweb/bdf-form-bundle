@@ -9,7 +9,10 @@ use Bdf\Form\Aggregate\FormInterface;
 use Bdf\Form\Attribute\AttributeForm;
 use Bdf\Form\Attribute\Processor\CompileAttributesProcessor;
 use Bdf\Form\Attribute\Processor\ReflectionProcessor;
+use Bdf\Form\Bundle\Tests\Forms\A;
+use Bdf\Form\Bundle\Tests\Forms\NoForbiddenValueValidator;
 use Bdf\Form\Bundle\Tests\FormsAttributes\StructDto;
+use Bdf\Form\Bundle\Tests\FormsAttributes\StructWithDependentConstraint;
 use Bdf\Form\Bundle\Tests\FormsAttributes\WithAnonymousFormClass;
 use Bdf\Form\Bundle\Tests\FormsAttributes\WithAttributes;
 use Bdf\Form\Registry\RegistryInterface;
@@ -115,6 +118,40 @@ class FormBundleWithAttributeTest extends TestCase
         ]);
         $this->assertTrue($form->valid());
         $this->assertEquals(new StructDto(1, 'azerty'), $form->value());
+    }
+
+    /**
+     * @return void
+     */
+    public function testFunctionalStructWithConstraintUsingValidatorWithDependencies()
+    {
+        if (!\class_exists(StructForm::class)) {
+            $this->markTestSkipped('Struct not supported');
+        }
+
+        $kernel = new \TestKernel(['conf_php8.yaml']);
+        $kernel->boot();
+
+        NoForbiddenValueValidator::$dependency = null;
+
+        /** @var FormInterface<StructWithDependentConstraint> $form */
+        $form = $kernel->getContainer()->get(RegistryInterface::class)
+            ->elementBuilder(StructForm::class)
+            ->class(StructWithDependentConstraint::class)
+            ->buildElement();
+
+        // 'foo' is the value carried by the injected A service, so it must be rejected by the custom constraint
+        $form->submit(['value' => 'foo']);
+
+        $this->assertFalse($form->valid());
+        $this->assertEquals(['value' => 'This value is forbidden.'], $form->error()->toArray());
+        // the validator has been instantiated from the container, with its dependency injected
+        $this->assertEquals(new A('foo'), NoForbiddenValueValidator::$dependency);
+
+        $form->submit(['value' => 'bar']);
+
+        $this->assertTrue($form->valid());
+        $this->assertEquals(new StructWithDependentConstraint('bar'), $form->value());
     }
 
     public function testDisableCompilation()

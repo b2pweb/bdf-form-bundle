@@ -21,6 +21,14 @@ services:
     calls:
       - validator: ['@validator']
 
+  bdf_form.inner_form_builder:
+    class: 'Bdf\Form\Aggregate\FormBuilder'
+    arguments: ['@Bdf\Form\Bundle\Registry\SymfonyRegistry']
+    public: true
+    shared: false
+    calls:
+      - validator: ['@validator']
+
   Bdf\Form\Aggregate\FormBuilderInterface:
     alias: 'Bdf\Form\Aggregate\FormBuilder'
     public: true

@@ -9,10 +9,12 @@ use Bdf\Form\Aggregate\FormBuilderInterface;
 use Bdf\Form\Bundle\FormBundle;
 use Bdf\Form\Bundle\Registry\SymfonyRegistry;
 use Bdf\Form\Bundle\Tests\Forms\A;
+use Bdf\Form\Bundle\Tests\Forms\CustomFormWithDependentConstraint;
 use Bdf\Form\Bundle\Tests\Forms\FooElement;
 use Bdf\Form\Bundle\Tests\Forms\FooElementBuilder;
 use Bdf\Form\Bundle\Tests\Forms\MyConstraintValidator;
 use Bdf\Form\Bundle\Tests\Forms\MyCustomForm;
+use Bdf\Form\Bundle\Tests\Forms\NoForbiddenValueValidator;
 use Bdf\Form\Csrf\CsrfElement;
 use Bdf\Form\Csrf\CsrfElementBuilder;
 use Bdf\Form\Registry\RegistryInterface;
@@ -86,6 +88,29 @@ class BdfFormBundleTest extends TestCase
         $form->submit(['foo' => 'bar', 'other' => 'baz']);
 
         $this->assertEquals(new A('foo'), MyConstraintValidator::$injectedParameter);
+    }
+
+    public function testCustomFormWithConstraintUsingValidatorWithDependencies()
+    {
+        $kernel = new \TestKernel();
+        $kernel->boot();
+
+        NoForbiddenValueValidator::$dependency = null;
+
+        $form = $kernel->getContainer()->get(RegistryInterface::class)->elementBuilder(CustomFormWithDependentConstraint::class)->buildElement();
+
+        // 'foo' is the value carried by the injected A service, so it must be rejected by the custom constraint
+        $form->submit(['value' => 'foo']);
+
+        $this->assertFalse($form->valid());
+        $this->assertEquals(['value' => 'This value is forbidden.'], $form->error()->toArray());
+        // the validator has been instantiated from the container, with its dependency injected
+        $this->assertEquals(new A('foo'), NoForbiddenValueValidator::$dependency);
+
+        $form->submit(['value' => 'bar']);
+
+        $this->assertTrue($form->valid());
+        $this->assertSame('bar', $form['value']->element()->value());
     }
 
     public function testCustomFormShouldUseCurrentElementBuilderInstance()

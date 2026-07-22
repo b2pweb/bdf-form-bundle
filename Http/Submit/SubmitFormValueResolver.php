@@ -15,6 +15,7 @@ use Symfony\Component\HttpKernel\ControllerMetadata\ArgumentMetadata;
 use Symfony\Component\HttpKernel\Event\ControllerArgumentsEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Contracts\Translation\TranslatorInterface;
+use Throwable;
 
 final class SubmitFormValueResolver implements ValueResolverInterface, EventSubscriberInterface
 {
@@ -39,7 +40,7 @@ final class SubmitFormValueResolver implements ValueResolverInterface, EventSubs
         $attribute = $argument->getAttributesOfType(SubmitForm::class)[0] ?? null;
 
         if (null === $attribute) {
-            if (FormInterface::class === $argument->getType()) {
+            if (\is_a($argument->getType(), FormInterface::class, true)) {
                 return [self::$formArgumentPlaceholder];
             }
 
@@ -84,12 +85,22 @@ final class SubmitFormValueResolver implements ValueResolverInterface, EventSubs
                 : $this->registry->elementBuilder(StructForm::class)->class($argument->form)->buildElement()
             ;
             $form->submit($payload);
+            $valid = $form->valid();
 
-            if ($argument->validate && !$form->valid()) {
+            if ($argument->validate && !$valid) {
                 throw new InvalidFormException($form->error(), $this->translator ? $this->translator->trans($argument->validateMessage) : $argument->validateMessage);
             }
 
-            $arguments[$i] = $argument->value ? $form->value() : $form;
+            if ($argument->value) {
+                try {
+                    $arguments[$i] = $valid ? $form->value() : null;
+                } catch (Throwable) {
+                    $arguments[$i] = null;
+                }
+            } else {
+                $arguments[$i] = $form;
+            }
+
             $hasChanged = true;
         }
 
