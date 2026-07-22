@@ -21,6 +21,7 @@ use Bdf\Form\Registry\RegistryInterface;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\HttpKernel\HttpKernelBrowser;
 
 /**
  * BdfSerializerBundleTest.
@@ -142,6 +143,23 @@ class BdfFormBundleTest extends TestCase
         $this->assertNotSame($kernel->getContainer()->get(RegistryInterface::class)->elementBuilder(FooElement::class), $kernel->getContainer()->get(RegistryInterface::class)->elementBuilder(FooElement::class));
 
         $this->assertSame($kernel->getContainer()->get(A::class), $builder->a);
+    }
+
+    public function testInjectFormAsControllerArgumentWithoutSubmitForm()
+    {
+        $kernel = new \TestKernel();
+        $client = new HttpKernelBrowser($kernel);
+
+        $client->request('POST', '/form-only', [
+            'foo' => 'bar',
+            'other' => 'baz',
+        ]);
+
+        // The MyCustomForm service is autowired and injected directly by the container,
+        // then submitted by the controller: the request succeeds.
+        $response = $client->getResponse();
+        $this->assertSame(200, $response->getStatusCode());
+        $this->assertSame(['value' => [], 'errors' => []], \json_decode($response->getContent(), true));
     }
 
     public function testCsrfElement()

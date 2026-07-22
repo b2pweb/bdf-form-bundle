@@ -18,19 +18,10 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 final class SubmitFormValueResolver implements ValueResolverInterface, EventSubscriberInterface
 {
-    /**
-     * Placeholder value for FormInterface parameter without associated SubmitForm attribute.
-     * The submitted form will be passed to arguments which is marked with this placeholder.
-     *
-     * @var object|null
-     */
-    private static $formArgumentPlaceholder;
-
     public function __construct(
         private readonly RegistryInterface $registry,
         private readonly ?TranslatorInterface $translator = null,
     ) {
-        self::$formArgumentPlaceholder ??= new \stdClass();
     }
 
     #[\Override]
@@ -39,8 +30,10 @@ final class SubmitFormValueResolver implements ValueResolverInterface, EventSubs
         $attribute = $argument->getAttributesOfType(SubmitForm::class)[0] ?? null;
 
         if (null === $attribute) {
-            if (\is_a($argument->getType(), FormInterface::class, true)) {
-                return [self::$formArgumentPlaceholder];
+            $type = $argument->getType();
+
+            if (null !== $type && \is_a($type, FormInterface::class, true)) {
+                return [new FormParameter($type)];
             }
 
             return [];
@@ -103,11 +96,10 @@ final class SubmitFormValueResolver implements ValueResolverInterface, EventSubs
             $hasChanged = true;
         }
 
-        if (null !== $form) {
-            foreach ($arguments as $i => $argument) {
-                if ($argument === self::$formArgumentPlaceholder) {
-                    $arguments[$i] = $form;
-                }
+        foreach ($arguments as $i => $argument) {
+            if ($argument instanceof FormParameter) {
+                $arguments[$i] = $form ?? $this->registry->elementBuilder($argument->type)->buildElement();
+                $hasChanged = true;
             }
         }
 
@@ -137,5 +129,19 @@ final class SubmitFormValueResolver implements ValueResolverInterface, EventSubs
         return [
             KernelEvents::CONTROLLER_ARGUMENTS => 'onKernelControllerArguments',
         ];
+    }
+}
+
+/**
+ * @internal
+ */
+final class FormParameter
+{
+    public function __construct(
+        /**
+         * @var class-string<FormInterface>
+         */
+        public readonly string $type,
+    ) {
     }
 }

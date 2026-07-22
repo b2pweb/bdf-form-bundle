@@ -101,6 +101,15 @@ class TestKernel extends Symfony\Component\HttpKernel\Kernel
         ]);
     }
 
+    #[Route('/form2', methods: ['POST'])]
+    public function form2(#[SubmitForm(form: PersonForm::class, validate: false)] ?PersonDto $person, PersonForm $form): JsonResponse
+    {
+        return new JsonResponse([
+            'value' => $person ?? $form->httpValue(),
+            'errors' => $form->error()->toArray(),
+        ]);
+    }
+
     #[Route('/person/{id}', methods: ['PUT'])]
     public function person(#[SubmitForm(source: [PayloadSource::Attributes, PayloadSource::Body], form: PersonForm::class)] PersonDto $dto): JsonResponse
     {

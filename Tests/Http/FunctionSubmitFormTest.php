@@ -98,6 +98,46 @@ class FunctionSubmitFormTest extends TestCase
         ], $content);
     }
 
+    public function testInjectFormAndValueValid()
+    {
+        $this->client->request('POST', '/form2', [
+            'id' => 1,
+            'firstName' => 'John',
+            'lastName' => 'Doe',
+        ]);
+
+        $content = \json_decode($this->client->getResponse()->getContent(), true);
+        $this->assertSame([
+            'value' => [
+                'id' => 1,
+                'firstName' => 'John',
+                'lastName' => 'Doe',
+            ],
+            'errors' => [],
+        ], $content);
+    }
+
+    public function testInjectFormAndValueError()
+    {
+        $this->client->request('POST', '/form2', [
+            'firstName' => '#####',
+            'lastName' => 'Doe',
+        ]);
+
+        $content = \json_decode($this->client->getResponse()->getContent(), true);
+        $this->assertSame([
+            'value' => [
+                'id' => null,
+                'firstName' => '#####',
+                'lastName' => 'Doe',
+            ],
+            'errors' => [
+                'id' => 'This value should not be blank.',
+                'firstName' => 'This value is not valid.',
+            ],
+        ], $content);
+    }
+
     public function testMultiplePayloadSource()
     {
         $this->client->request('PUT', '/person/42', [

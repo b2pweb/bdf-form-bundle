@@ -1,8 +1,11 @@
 <?php
 
+use Bdf\Form\Bundle\Tests\Forms\MyCustomForm;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\Routing\RouteCollectionBuilder;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
 
 class TestKernel extends Symfony\Component\HttpKernel\Kernel
 {
@@ -25,8 +28,12 @@ class TestKernel extends Symfony\Component\HttpKernel\Kernel
         ];
     }
 
-    protected function configureRoutes(RouteCollectionBuilder $routes)
+    protected function configureRoutes(RoutingConfigurator $routes)
     {
+        $routes->add('form_only', '/form-only')
+            ->controller('kernel::formOnly')
+            ->methods(['POST'])
+        ;
     }
 
     protected function configureContainer(ContainerBuilder $c, LoaderInterface $loader)
@@ -36,5 +43,15 @@ class TestKernel extends Symfony\Component\HttpKernel\Kernel
         foreach ($this->configs as $config) {
             $loader->load(__DIR__.'/'.$config);
         }
+    }
+
+    public function formOnly(MyCustomForm $form, Request $request): JsonResponse
+    {
+        $form->submit($request->request->all());
+
+        return new JsonResponse([
+            'value' => $form->value(),
+            'errors' => $form->error()->toArray(),
+        ]);
     }
 }
